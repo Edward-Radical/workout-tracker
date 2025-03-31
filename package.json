@@ -1,0 +1,23 @@
+{
+  "name": "workout-tracker",
+  "version": "1.0.0",
+  "description": "App to let users track their workouts and progress. - Roadmap.sh project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Edward-Radical/workout-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Edward-Radical/workout-tracker/issues"
+  },
+  "homepage": "https://github.com/Edward-Radical/workout-tracker#readme",
+  "dependencies": {
+    "@edward-radical/node_server_init": "^1.0.12",
+    "node-server-init": "^1.1.8"
+  }
+}

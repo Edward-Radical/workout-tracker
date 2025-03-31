@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/server.ts"
+  },
+  "dependencies": {
+    "db-migrate-pg": "*",
+    "dotenv": "*",
+    "express": "*",
+    "pg": "*",
+    "sequelize": "*",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "ts-node": "*",
+    "typescript": "*"
+  },
+  "devDependencies": {
+    "@types/db-migrate-pg": "*",
+    "@types/express": "*",
+    "@types/node": "*",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "nodemon": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+}
