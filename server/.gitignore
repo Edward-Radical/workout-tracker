@@ -135,3 +135,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .qodo
+
+# Ignore database files (for example, if you're using SQLite)
+*.sqlite
+*.sqlite3
