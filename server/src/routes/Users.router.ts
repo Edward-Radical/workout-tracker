@@ -1,9 +1,13 @@
 import express from 'express';
+import validateUserInput from '../validators/userValidation';
+
 const UsersRouter = express.Router();
+
 
 // Metodi dei Controller
 import {
-    httpGetUsers
+    httpGetUsers,
+    httpPostUser
 } from '../controllers/Users.controller';
 
  /**
@@ -26,5 +30,6 @@ import {
  *         description: Error querying the database TABLE Users
  */
 UsersRouter.get('/', httpGetUsers);
+UsersRouter.post('/', validateUserInput, httpPostUser);
 
 export default UsersRouter;
