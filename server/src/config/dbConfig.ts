@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
+import logger from '../utils/logger';
 
 // Load environment variables from the .env file
 dotenv.config();
@@ -21,7 +22,9 @@ const sequelize = new Sequelize(
     host: DB_HOST,                  // Host address
     port: parseInt(DB_PORT, 10),    // DB Port
     dialect: 'postgres',            // DB Type (PostgreSQL)
-    logging: false,                 // Disable query log
+    logging: (sql: string) => {
+        logger.info(`Query: ${sql}`);
+    }
   }
 );
 

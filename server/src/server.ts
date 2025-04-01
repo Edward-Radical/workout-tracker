@@ -3,6 +3,9 @@ require('dotenv').config();
 import HTTP from 'http';
 import app from './index';
 
+// Winston Logger
+import logger from './utils/logger';
+
 // ASSIGNEMENT
 const PORT = process.env.PORT || 5000;
 
@@ -10,15 +13,14 @@ const PORT = process.env.PORT || 5000;
 const SERVER = HTTP.createServer(app);
 
 function startServer(){
-    console.log('Function start server called');
-    
+    logger.info('Function start server called');
 
     try {
         SERVER.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
+            logger.info(`Server is running on port ${PORT}`);
         });
     } catch (error) {
-        console.error(`Error starting the server: ${error}`); 
+        logger.error(`Error starting the server: ${error}`); 
     }
 }
 
