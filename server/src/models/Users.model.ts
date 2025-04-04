@@ -2,6 +2,7 @@ import { Model, InferAttributes, InferCreationAttributes, DataTypes, CreationOpt
 import sequelize from "../config/dbConfig";
 import { AppError } from '../utils/AppError'; // Import the custom error class
 import logger from '../utils/logger';
+import Workouts from './Workouts.model';
 
 // Define the User model class
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -88,7 +89,13 @@ async function index(): Promise<InferAttributes<User>[] | undefined> {
         // Query the database
         const users = await User.findAll({
             limit: 10,  // Set limit to 10 users per page
-            offset: 0   // Set offset based on current page number
+            offset: 0,   // Set offset based on current page number
+            include:[
+                {
+                    model: Workouts,
+                    required: false
+                }
+            ]
         });
 
         // Convert Sequelize instances to plain objects for easy use
