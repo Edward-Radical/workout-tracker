@@ -113,7 +113,7 @@ WorkoutsRouter.post('/', validateWorkoutInput, httpPostWorkout);
  *         type: "string"
  *       - name: "body"
  *         in: "body"
- *         description: "The workout details to be created"
+ *         description: "The workout details to be updated"
  *         required: true
  *         schema:
  *           type: "object"
