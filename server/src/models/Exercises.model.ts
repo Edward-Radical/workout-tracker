@@ -11,6 +11,10 @@ class Exercises extends Model<InferAttributes<Exercises>, InferCreationAttribute
     declare description: string;
     declare notes: string;
     declare deletedAt: Date | null;
+
+    // Define the association methods explicitly
+    public addWorkout!: (workout: Workouts | number) => Promise<void>; // Add method for association
+    public getWorkouts!: () => Promise<Workouts[]>; // For fetching associated workouts
 }
 
 // Initialize the Workout model
@@ -151,6 +155,11 @@ async function store(request: Exercises): Promise<object | undefined> {
             description,
             notes
         });
+
+        // Questa gestione andrà spostata in una httpCall che farà associare esercizi
+        // già creati a un workout esistente
+        // const realtedWorkout = await Workouts.findByPk(3);
+        // if(realtedWorkout) await realtedWorkout.addExercise(newExercise);
 
         // Convert Sequelize instances to plain object for easy use
         const results = newExercise.get({ plain: true });

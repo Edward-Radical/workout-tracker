@@ -16,6 +16,10 @@ class Workouts extends Model<InferAttributes<Workouts>, InferCreationAttributes<
     declare user_id: number;
     declare notes: string;
     declare deletedAt: Date | null;
+
+    // Define the association methods explicitly
+    public addExercise!: (exercise: Exercises | number) => Promise<void> // Add method for association
+    public getExercises!: () => Promise<Exercises[]>; // For fetching associated exercises
 }
 
 // Initialize the Workout model
