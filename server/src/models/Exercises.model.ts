@@ -9,7 +9,11 @@ class Exercises extends Model<InferAttributes<Exercises>, InferCreationAttribute
     declare id: CreationOptional<number>;
     declare name: string;
     declare description: string;
-    declare notes: string;
+    declare type?: string;
+    declare body_part?: string;
+    declare equipment?: string;
+    declare level?: string;
+    declare notes?: string;
     declare deletedAt: Date | null;
 
     // Define the association methods explicitly
@@ -33,7 +37,23 @@ Exercises.init(
             },
         },
         description: {
-            type: new DataTypes.STRING(500),
+            type: new DataTypes.STRING,
+            allowNull: true,
+        },
+        type: {
+            type: new DataTypes.STRING(100),
+            allowNull: true,
+        },
+        body_part: {
+            type: new DataTypes.STRING(100),
+            allowNull: true,
+        },
+        equipment: {
+            type: new DataTypes.STRING(100),
+            allowNull: true,
+        },
+        level: {
+            type: new DataTypes.STRING(100),
             allowNull: true,
         },
         notes: {
