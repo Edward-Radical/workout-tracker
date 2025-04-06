@@ -100,7 +100,7 @@ WorkoutsRouter.post('/', validateWorkoutInput, httpPostWorkout);
 
 /**
  * @swagger
- * /workouts:
+ * /workouts/{id}:
  *   patch:
  *     tags: [Workouts]
  *     summary: Update an existing workout
@@ -138,7 +138,7 @@ WorkoutsRouter.post('/', validateWorkoutInput, httpPostWorkout);
  *               description: "The User related to this specific workout"
  *          
  *     responses:
- *       201:
+ *       200:
  *         description: "Successfully updated the workout"
  *       400:
  *         description: "Error during workout input validation"
