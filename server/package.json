@@ -8,6 +8,8 @@
     "seed-exercises": "ts-node src/utils/seedExercise.ts"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
     "csv-parse": "^5.6.0",
     "db-migrate-pg": "*",
     "dotenv": "*",
@@ -29,6 +31,7 @@
   "devDependencies": {
     "@types/db-migrate-pg": "*",
     "@types/express": "*",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "*",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",

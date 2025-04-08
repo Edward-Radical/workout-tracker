@@ -1,8 +1,13 @@
+import * as dotenv from 'dotenv';
+dotenv.config();  // Loads environment variables
 import { Model, InferAttributes, InferCreationAttributes, DataTypes, CreationOptional } from 'sequelize';
 import sequelize from "../config/dbConfig";
 import { AppError } from '../utils/AppError'; // Import the custom error class
 import logger from '../utils/logger';
 import Workouts from './Workouts.model';
+
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 // Define the User model class
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -115,13 +120,16 @@ async function index(): Promise<InferAttributes<User>[] | undefined> {
     }
 }
 
-async function store(request: User): Promise<object | undefined> {
+async function register(request: User): Promise<object | undefined>{
 
-    const {email, password, username} = request;
+    const { username, email, password } = request;
+        
     try {
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await User.create({
-            email,
-            password,
+            email, 
+            password: hashedPassword,
             username
         });
 
@@ -129,11 +137,48 @@ async function store(request: User): Promise<object | undefined> {
         const results = newUser.get({ plain: true });
         return results;
 
-    } catch (error: unknown) {
+    } catch (error) {
         // Safely handle the error
         if (error instanceof Error) {
             logger.error(error);
-            throw new AppError(error.message || 'Database query failed', 500);
+            throw new AppError(error.message || 'Error gcreating the User', 500);
+        } else {
+            // If error is not an instance of Error, handle accordingly
+            logger.error('An unknown error occurred');
+        }
+    }
+}
+
+async function login(request: User, enteredPassword: any): Promise<string | undefined>{
+
+    const { email, password } = request;
+        
+    try {
+
+        // Find user by email
+        const user = request;
+        if(user){
+            // Compare the entered password with the hashed password
+            const isMatch = await bcrypt.compare(enteredPassword, user.password);
+            if (!isMatch) {
+                logger.error('Invalid credentials');
+                throw new AppError('Invalid credentials', 400);
+            }
+
+            // Generate JWT token
+            const JWT_SECRET = process.env.JWT_SECRET;
+            if (!JWT_SECRET) {
+                throw new Error('JWT_SECRET is not defined');
+            }else{
+                const token = jwt.sign({ userId: email }, JWT_SECRET, { expiresIn: '1h' });
+                return token;
+            }
+        }
+    } catch (error) {
+        // Safely handle the error
+        if (error instanceof Error) {
+            logger.error(error);
+            throw new AppError(error.message || 'Error gcreating the User', 500);
         } else {
             // If error is not an instance of Error, handle accordingly
             logger.error('An unknown error occurred');
@@ -143,5 +188,5 @@ async function store(request: User): Promise<object | undefined> {
 
 // Exporting the function as a named export
 export default User;
-export { index, store };
+export { index, register, login };
   

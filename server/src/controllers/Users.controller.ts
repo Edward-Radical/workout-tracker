@@ -8,9 +8,10 @@ import { validationResult } from 'express-validator';
 
 // Funzioni del Model
 import { 
-    index, store
+    index, register, login
 } from '../models/Users.model';
 
+import User from '../models/Users.model';
 
 async function httpGetUsers(req: Request, res: Response, next: NextFunction){
     try {
@@ -25,8 +26,8 @@ async function httpGetUsers(req: Request, res: Response, next: NextFunction){
     }
 };
 
-async function httpPostUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-
+async function httpRegisterUser(req: Request, res: Response, next: NextFunction): Promise<void>{
+    
     //Check for validation error
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -39,21 +40,69 @@ async function httpPostUser(req: Request, res: Response, next: NextFunction): Pr
     }
 
     const request = req.body;
+    try {
+        // Check if the user already exists
+        const existingUser = await User.findOne({
+            where: {
+                email: req.body.email
+            }
+        });
+
+        if (existingUser) {
+            res.status(400).json({ 
+                success: false,
+                message: 'User already exists' 
+            });
+        }
+
+        // Register the user
+        const newUser = await register(request);
+        res.status(201).json({
+            success: true,
+            message: 'User registered successfully',
+            data: newUser
+        })
+    } catch (error) {
+        logger.error(error);
+        next(error)
+    }
+}
+
+async function httpLoginUser(req: Request, res: Response, next: NextFunction): Promise<void>{
+    
+    const password = req.body.password;
 
     try {
-        const user = await store(request);
-        res.status(200).json({
-            success: true,
-            message: "User created successfully",
-            data: user
+        // Find user by email
+        const user = await User.findOne({
+            where: {
+                email: req.body.email
+            }
         });
-    } catch (err) {
-        logger.error(err);
-        next(err)
+
+        if (!user) {
+            res.status(400).json({ 
+                success: false,
+                message: 'User not found' 
+            });
+        }
+
+        if(user){
+            const JWT_TOKEN = await login(user, password);
+            res.status(201).json({
+                success: true,
+                message: 'User logged successfully',
+                data: JWT_TOKEN
+            })
+        }
+    } catch (error) {
+        logger.error(error);
+        next(error)
     }
 }
 
 export {
     httpGetUsers,
-    httpPostUser
+    httpLoginUser,
+    httpRegisterUser
 }
