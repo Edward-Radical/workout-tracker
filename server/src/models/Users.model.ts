@@ -8,13 +8,15 @@ import Workouts from './Workouts.model';
 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import passport from 'passport';
 
 // Define the User model class
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: CreationOptional<number>;
     declare email: string;
-    declare password: string;
+    declare password?: string;
     declare username: string;
+    declare social_login?: { social: string; socialId: string }
     declare deletedAt: Date | null;
 }
 
@@ -48,6 +50,10 @@ User.init(
                 notEmpty: { msg: 'Username cannot be empty' },
                 len: { args: [1, 100], msg: 'Userame should be between 1 and 100 characters' },
             },
+        },
+        social_login: {
+            type: new DataTypes.JSONB,
+            allowNull: true,
         },
         deletedAt: {
             type: new DataTypes.DATE,
@@ -125,17 +131,20 @@ async function register(request: User): Promise<object | undefined>{
     const { username, email, password } = request;
         
     try {
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({
-            email, 
-            password: hashedPassword,
-            username
-        });
+        if(password){
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newUser = await User.create({
+                email, 
+                password: hashedPassword,
+                username
+            });
 
-        // Convert Sequelize instances to plain object for easy use
-        const results = newUser.get({ plain: true });
-        return results;
+            // Convert Sequelize instances to plain object for easy use
+            const results = newUser.get({ plain: true });
+            return results;
+        }
+
 
     } catch (error) {
         // Safely handle the error
@@ -151,13 +160,10 @@ async function register(request: User): Promise<object | undefined>{
 
 async function login(request: User, enteredPassword: any): Promise<string | undefined>{
 
-    const { email, password } = request;
-        
     try {
-
         // Find user by email
         const user = request;
-        if(user){
+        if(user && user.password){
             // Compare the entered password with the hashed password
             const isMatch = await bcrypt.compare(enteredPassword, user.password);
             if (!isMatch) {
@@ -170,7 +176,7 @@ async function login(request: User, enteredPassword: any): Promise<string | unde
             if (!JWT_SECRET) {
                 throw new Error('JWT_SECRET is not defined');
             }else{
-                const token = jwt.sign({ userId: email }, JWT_SECRET, { expiresIn: '1h' });
+                const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
                 return token;
             }
         }
@@ -178,7 +184,7 @@ async function login(request: User, enteredPassword: any): Promise<string | unde
         // Safely handle the error
         if (error instanceof Error) {
             logger.error(error);
-            throw new AppError(error.message || 'Error gcreating the User', 500);
+            throw new AppError(error.message || 'Error creating the User', 500);
         } else {
             // If error is not an instance of Error, handle accordingly
             logger.error('An unknown error occurred');

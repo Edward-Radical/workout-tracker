@@ -68,7 +68,7 @@ async function httpRegisterUser(req: Request, res: Response, next: NextFunction)
     }
 }
 
-async function httpLoginUser(req: Request, res: Response, next: NextFunction): Promise<void>{
+async function httpLoginUser(req: Request, res: Response, next: NextFunction): Promise<any>{
     
     const password = req.body.password;
 
@@ -89,11 +89,39 @@ async function httpLoginUser(req: Request, res: Response, next: NextFunction): P
 
         if(user){
             const JWT_TOKEN = await login(user, password);
+            res.cookie("wt-jwt-session", JWT_TOKEN, {
+                    httpOnly: true,                                 // Impedisce l'accesso da JS (XSS protection)
+                    secure: process.env.NODE_ENV === 'production',  // Solo via HTTPS (in prod)
+                    sameSite: 'strict',                             // Protegge da CSRF cross-site
+                    maxAge: 60 * 60 * 1000                          // 1 ora
+                })
+
             res.status(201).json({
+                succes: true,
+                token: JWT_TOKEN
+            });
+        }
+    } catch (error) {
+        logger.error(error);
+        next(error);
+        
+    }
+}
+
+async function httpSocialLogin(req: Request, res: Response, next: NextFunction): Promise<void>{
+    
+    const { user } = req;
+
+    try {
+        if(user){
+            // Return user details
+            res.status(200).json({
                 success: true,
-                message: 'User logged successfully',
-                data: JWT_TOKEN
-            })
+                message: 'User authenticated successfully',
+                user: user,
+            });
+
+            //In questo punto si potrebbe eseguire un redirect a pagine di frontend poichè l'autenticazione è andata a buon fine
         }
     } catch (error) {
         logger.error(error);
@@ -101,8 +129,42 @@ async function httpLoginUser(req: Request, res: Response, next: NextFunction): P
     }
 }
 
+async function httpLogout(req: Request, res: Response, next: NextFunction): Promise<void>{
+
+    try {
+        // JWT Logout
+        res.clearCookie('wt-jwt-session', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',  // Solo su HTTPS in produzione
+            sameSite: 'strict',
+            maxAge: 0 // Impostando maxAge a 0, il cookie viene immediatamente rimosso
+        });
+
+        // Passport Logout
+        res.clearCookie('wt-social-session');
+        res.clearCookie('wt-social-session.sig');
+        req.logout((err: any) => {
+            if (err) next(err);
+
+            res.status(200).json({
+                success: true,
+                message: 'Successfully logged out'
+            });
+        });
+
+    } catch (error) {
+        logger.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Error occurred during logout'
+        });
+    }
+}
+
 export {
     httpGetUsers,
     httpLoginUser,
-    httpRegisterUser
+    httpRegisterUser,
+    httpSocialLogin,
+    httpLogout
 }

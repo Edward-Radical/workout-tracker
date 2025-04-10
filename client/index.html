@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p onclick="logUser()">login</p>
+    <p onclick="logOutUser()">logout</p>
+</body>
+</html>
+
+<script>
+async function logUser(){
+    console.log("function logUser() INIT");
+    
+    const url = "http://localhost:5000/auth/login";
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email: "parisi.arianna@test.it", password: "Arianna14!"}),
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const json = await response.json();
+        console.log(json);
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+async function logOutUser(){
+    console.log("function logUser() INIT");
+    
+    const url = "http://localhost:5000/auth/logout";
+    try {
+        const response = await fetch(url, {
+            method: "GET"
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const json = await response.json();
+        console.log(json);
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+</script>
