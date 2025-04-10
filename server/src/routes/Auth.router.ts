@@ -75,7 +75,7 @@ AuthUserRouter.get('/google', passport.authenticate('google', { scope: ['profile
  * If fails redirect the user to the login page
  * If success it call the controller function httpSocialLogin
  */
-AuthUserRouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login'}), httpSocialLogin);
+AuthUserRouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login', successRedirect: '/'}), httpSocialLogin);
 
 AuthUserRouter.get('/logout', httpLogout);
 

@@ -6,8 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    <p onclick="logUser()">login</p>
-    <p onclick="logOutUser()">logout</p>
+    <div style="width:50%;height:50px;padding:8px;border:1px solid black;">
+        <ul style="display:flex;flex-direction:row;justify-content: space-around;cursor: pointer;">
+            <li onclick="logUser()">LOGIN JWT</li>
+            <li onclick="logUserWGoogle()">LOGIN GOOGLE</li>
+            <li onclick="getExercises()">Exercises</li>
+            <li onclick="logOutUser()">LOGOUT</li>
+        </ul>
+    </div>
+
+    <div id="content" style="width:50%;height:auto;padding:8px;border:1px solid black;">
+    </div>
 </body>
 </html>
 
@@ -29,10 +38,30 @@ async function logUser(){
         }
 
         const json = await response.json();
-        console.log(json);
+        var content = document.getElementById("content");
+        content.innerHTML = json.token;
     } catch (error) {
         console.error(error.message);
     }
+}
+async function logUserWGoogle(){
+    console.log("function logUserWGoogle() INIT");
+    
+    const url = "http://localhost:5000/auth/google";
+    window.location.replace(url);
+    // try {
+    //     const response = await fetch(url, {
+    //         method: "GET",
+    //     });
+    //     if (!response.ok) {
+    //         throw new Error(`Response status: ${response.status}`);
+    //     }
+
+    //     const json = await response.json();
+    //     console.log(json);
+    // } catch (error) {
+    //     console.error(error.message);
+    // }
 }
 async function logOutUser(){
     console.log("function logUser() INIT");
@@ -47,6 +76,39 @@ async function logOutUser(){
         }
 
         const json = await response.json();
+        var content = document.getElementById("content");
+        content.innerHTML = 'USER LOGGED OUT';
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+async function getExercises(){
+    console.log("function logUser() INIT");
+    
+    const url = "http://localhost:5000/v1/exercises";
+    try {
+        const response = await fetch(url, {
+            method: "GET"
+        });
+        if (!response.ok) {
+            // throw new Error(`Response status: ${response.status}`);
+            var content = document.getElementById("content");
+            content.innerHTML = 'Anauthorized';
+        }
+
+        const json = await response.json();
+
+        if(json.success){
+            var content = document.getElementById("content");
+            var ul = document.createElement("ul");
+            content.appendChild(ul);
+            (json.data).forEach(element => {
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode('Esercizio: ' + element.name));
+                ul.appendChild(li);
+            });
+        }
+
         console.log(json);
     } catch (error) {
         console.error(error.message);

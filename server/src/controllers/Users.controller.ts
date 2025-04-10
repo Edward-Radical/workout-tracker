@@ -129,28 +129,42 @@ async function httpSocialLogin(req: Request, res: Response, next: NextFunction):
     }
 }
 
-async function httpLogout(req: Request, res: Response, next: NextFunction): Promise<void>{
+async function httpLogout(req: Request, res: Response, next: NextFunction): Promise<any>{
 
     try {
-        // JWT Logout
-        res.clearCookie('wt-jwt-session', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',  // Solo su HTTPS in produzione
-            sameSite: 'strict',
-            maxAge: 0 // Impostando maxAge a 0, il cookie viene immediatamente rimosso
-        });
-
-        // Passport Logout
-        res.clearCookie('wt-social-session');
-        res.clearCookie('wt-social-session.sig');
-        req.logout((err: any) => {
-            if (err) next(err);
-
+        const token = req.cookies["wt-jwt-session"];
+        if(token){
+            // JWT Logout
+            res.clearCookie('wt-jwt-session');
             res.status(200).json({
                 success: true,
                 message: 'Successfully logged out'
             });
-        });
+        }else{
+
+            res.clearCookie('wt-social-session', {
+                path: '/', // default path
+                httpOnly: true,
+                secure: false, // deve combaciare con quello usato all’inizio
+                sameSite: 'lax', // o 'lax' se usato così nella sessione
+            });
+            res.clearCookie('wt-social-session.sig', {
+                path: '/', // default path
+                httpOnly: true,
+                secure: false, // deve combaciare con quello usato all’inizio
+                sameSite: 'lax', // o 'lax' se usato così nella sessione
+            });
+
+            // TO-DO ancora i cookie non vengono puliti
+
+            (req.logout as any)();
+
+            return res.status(200).json({
+                success: true,
+                message: 'Successfully logged out'
+            });
+        }
+
 
     } catch (error) {
         logger.error(error);

@@ -28,6 +28,9 @@ const app = express();
 // Parse any incoming JSON
 app.use(express.json());
 
+// Save the JWT token in the cookie session
+app.use(cookieParser());
+
 const COOKIE_KEY_1 = process.env.COOKIE_KEY_1 as string;
 const COOKIE_KEY_2 = process.env.COOKIE_KEY_2 as string;
 
@@ -35,15 +38,18 @@ const COOKIE_KEY_2 = process.env.COOKIE_KEY_2 as string;
 app.use(cookieSession({
     name: "wt-social-session",
     maxAge: 60 * 60 * 1000,
-    keys: [ COOKIE_KEY_1, COOKIE_KEY_2 ]
+    keys: [ COOKIE_KEY_1, COOKIE_KEY_2 ],
+    path: '/', // default path
+    httpOnly: true,
+    secure: false, // deve combaciare con quello usato all’inizio
+    sameSite: 'lax', // o 'lax' se usato così nella sessione
 }));
 
 // Passport.js
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Save the JWT token in the cookie session
-app.use(cookieParser());
+
 
 // Setup Swagger
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
