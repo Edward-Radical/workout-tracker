@@ -1,0 +1,32 @@
+.starter-container{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: url('/starter-bg.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .greet{
+        position: relative;
+        width: 80%;
+        top: 50%;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bolder;
+        padding-left: 50px;
+    }
+
+    .btns-action{
+        position: absolute;
+        bottom: 0;
+        padding: 0 50px 70px 50px;
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        row-gap: 15px;
+    }
+}
