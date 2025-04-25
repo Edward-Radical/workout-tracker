@@ -18,7 +18,7 @@ import {
 
 async function httpGetWorkouts(req: Request, res: Response, next: NextFunction){
     try {
-        const requests = await index();
+        const requests = await index(req?.query);
         res.status(200).json({
             success: true,
             data: requests
@@ -64,7 +64,7 @@ async function httpPostWorkout(req: Request, res: Response, next: NextFunction) 
 
     const request = req.body;
     try {
-        const workout = await store(request);
+        const workout = await store(request, req.body.exercises_list);
         res.status(201).json({
             success: true,
             message: "Workout created successfully",

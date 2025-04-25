@@ -1,10 +1,10 @@
-import { Model, InferAttributes, InferCreationAttributes, DataTypes, CreationOptional } from 'sequelize';
+import { Model, InferAttributes, InferCreationAttributes, DataTypes, CreationOptional, Op, where, literal } from 'sequelize';
 import sequelize from "../config/dbConfig";
 import { AppError } from '../utils/AppError'; // Import the custom error class
 import logger from '../utils/logger';
 import User from './Users.model';
 import Exercises from './Exercises.model';
-import Sets from './Sets.model';
+import Workouts_Exercises from './Workouts_Exercises.model';
 
 // Define the Workout model class
 class Workouts extends Model<InferAttributes<Workouts>, InferCreationAttributes<Workouts>> {
@@ -73,6 +73,10 @@ Workouts.init(
     }
 );
 
+interface WorkoutsQueryParams{
+    date?: Date | null;
+}
+
 Workouts.addHook(
     'beforeDestroy', async (workout: Workouts) => {
         try {
@@ -108,13 +112,36 @@ Workouts.addHook(
     *
     * @return Response
 */
-async function index(): Promise<InferAttributes<Workouts>[] | undefined> {
+async function index(params: WorkoutsQueryParams): Promise<InferAttributes<Workouts>[] | undefined> {
+
+
+    // Schedule col = YYYY-MM-DD
+    
+    const whereClause: any = {};
+
+    if(params){
+        const { date } = params || {};
+        
+        whereClause[Op.and] = whereClause[Op.and] || [];
+        whereClause[Op.and].push(
+            where(
+                literal("schedule::date"),
+                date
+            )
+        )
+    } 
+        
+    
     try {
         // Query the database
         const workouts = await Workouts.findAll({
+            where: whereClause,
             limit: 10,  // Set limit to 10 workouts per page
             offset: 0,   // Set offset based on current page number
-            order: [['id', 'ASC']]
+            order: [['id', 'ASC']],
+            include: {
+                model: Exercises
+            }
         });
 
         // Convert Sequelize instances to plain objects for easy use
@@ -147,9 +174,11 @@ async function show(id: number): Promise<object | null> {
             where: { id: id},
             include: [{
                 model: Exercises,
-                include: [{
-                    model: Sets
-                }]
+                include: [
+                    {
+                        model: Workouts_Exercises
+                    }
+                ]
             }]
         });
 
@@ -181,7 +210,7 @@ async function show(id: number): Promise<object | null> {
     *
     * @return Response
 */
-async function store(request: Workouts): Promise<object | undefined> {
+async function store(request: Workouts, exercises_list: string[]): Promise<object | undefined> {
 
     const {name, description, schedule, rep_days, notes, user_id} = request;
     try {
@@ -194,9 +223,16 @@ async function store(request: Workouts): Promise<object | undefined> {
             user_id
         });
 
+        //If there are related exercise do the association
+        for (const exerciseId of exercises_list) {
+            const ex = await Exercises.findByPk(exerciseId);
+            if(ex) await newWorkout.addExercise(ex);
+        }
+
         // Convert Sequelize instances to plain object for easy use
         const results = newWorkout.get({ plain: true });
         return results;
+        // return undefined;
 
     } catch (error: unknown) {
         // Safely handle the error
