@@ -18,7 +18,7 @@ import {
 
 async function httpGetWorkouts(req: Request, res: Response, next: NextFunction){
     try {
-        const requests = await index(req?.query);
+        const requests = await index(req.query);
         res.status(200).json({
             success: true,
             data: requests

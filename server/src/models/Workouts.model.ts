@@ -74,7 +74,7 @@ Workouts.init(
 );
 
 interface WorkoutsQueryParams{
-    date?: Date | null;
+    date?: Date;
 }
 
 Workouts.addHook(
@@ -114,21 +114,17 @@ Workouts.addHook(
 */
 async function index(params: WorkoutsQueryParams): Promise<InferAttributes<Workouts>[] | undefined> {
 
-
-    // Schedule col = YYYY-MM-DD
-    
-    const whereClause: any = {};
-
+    const whereClause: any = [];
     if(params){
         const { date } = params || {};
-        
-        whereClause[Op.and] = whereClause[Op.and] || [];
-        whereClause[Op.and].push(
-            where(
-                literal("schedule::date"),
-                date
+        if(date){
+            whereClause.push(
+                where(
+                    literal("schedule::date"),
+                    date
+                )
             )
-        )
+        }
     } 
         
     
