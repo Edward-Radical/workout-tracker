@@ -80,7 +80,7 @@
                     <div class="latest-workout">
                         <div class="header">
                             <span>Today's Workouts</span>
-                            <router-link to="/list-workout">View all</router-link>
+                            <router-link class="filter-all" to="/list-workout">View all</router-link>
                         </div>
                         <router-link :to="{ name: 'workout-show', params: { id: w.id } }"
                             class="workout-card"
@@ -92,10 +92,13 @@
                             <div class="hr"></div>
                             <div class="tag">{{ w.Exercises.length }} Exercises</div>
                         </router-link>
+                    </div>
+
+                    <footer>
                         <div class="btn">
                             <router-link to="/create-workout" class="cta cta-orange">Add workout</router-link>
                         </div>
-                    </div>
+                    </footer>
                 </div>
             </template>
         </Auth>
@@ -108,10 +111,12 @@
 import Auth from '../components/Auth.vue'
 import auth from "../api/auth.js";
 import workout from '@/api/workout';
-import { ref } from 'vue';
+import helpers from '@/helpers/global'
 
 import googleCta from '@/components/googleCta.vue';
 
+import { onBeforeRouteUpdate  } from 'vue-router'
+import { ref } from 'vue';
 
 let user = ref(JSON.parse(localStorage.getItem('userObj')));
 let userLogged = ref(localStorage.getItem('userLogged'));
@@ -195,8 +200,10 @@ async function logout(){
 // GET WORKOUTS
 let workoutsList = ref([]);
 async function getWorkouts(){
+
+    const today = helpers.getTodayDate();
     try {
-        const workouts = await workout.httpGetWorkouts();
+        const workouts = await workout.httpGetWorkouts(today);
         if(workouts) workoutsList.value = workouts;
     } catch (error) {
         console.log(error.message);
@@ -206,6 +213,11 @@ async function getWorkouts(){
 if(userLogged.value && user.value){
     getWorkouts();
 }
+
+onBeforeRouteUpdate (async (to, from) => {
+    getWorkouts();
+})
+
 </script>
 
 
