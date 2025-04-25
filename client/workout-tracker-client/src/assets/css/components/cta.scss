@@ -8,6 +8,7 @@
     align-items: center;
     font-size: 20px;
     font-weight: bold;
+    text-decoration: none;
 
     &.cta-white{
         background-color: #fff;
@@ -29,6 +30,16 @@
         color: #000;
         border-radius: 5px;
         font-weight: lighter;
+    }
+    &.cta-secondary{
+        border: none;
+        background-color: #2F3541;
+        text-transform: uppercase;
+        color: #F1870E;
+        border-radius: 5px;
+        font-weight: lighter;
+        height: 30px;
+        font-size: 12px;
     }
     &.small{
         border: none;
