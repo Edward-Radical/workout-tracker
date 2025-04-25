@@ -80,7 +80,10 @@
                     <div class="latest-workout">
                         <div class="header">
                             <span>Today's Workouts</span>
-                            <router-link class="filter-all" to="/list-workout">View all</router-link>
+                            <div class="pointer">
+                                <router-link class="filter-all" to="/list-workout">View all</router-link>
+                                <IconArrowRight></IconArrowRight>
+                            </div>
                         </div>
                         <router-link :to="{ name: 'workout-show', params: { id: w.id } }"
                             class="workout-card"
@@ -114,6 +117,7 @@ import workout from '@/api/workout';
 import helpers from '@/helpers/global'
 
 import googleCta from '@/components/googleCta.vue';
+import IconArrowRight from '@/components/icons/IconArrowRight.vue';
 
 import { onBeforeRouteUpdate  } from 'vue-router'
 import { ref } from 'vue';

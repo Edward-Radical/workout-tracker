@@ -1,78 +1,49 @@
-.main-view{
-    position: relative;
-    width: 100%;
-    height: 100%;
+.workout-list-container{
+
     background-color: #181C23;
+    padding: 50px;
+    position: relative;
 
-    padding: 0 50px;
-    padding-bottom: 50px;
-
-    color: #fff;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 16px;
-
-    overflow-x: scroll;
+    overflow-y: scroll;
     scrollbar-width: none;
     &::-webkit-scrollbar{
         display: none;
     }
 
-    span{
-        font-weight: bold;
-    }
-
-    .logout{
-        position: absolute;
-        right: 20px;
-        top: 20px;
-    }
-
-    .greet{
+    header{
         position: relative;
-        width: 100%;
-        margin-top: 100px;
-        font-size: 20px;
-        font-weight: thin;
-    }
-
-    .latest-workout{
-        position: relative;
-        width: 100%;
-        margin-top: 100px;
+        margin-top: 20px;
+        color: #fff;
+    
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
         font-size: 16px;
 
-        .header{
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: baseline;
-            text-decoration: none;
-            .pointer{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                &:hover{
-                    cursor: pointer;
-                }
-                .filter-all{
-                    color: #F1870E;
-                    font-size: 14px;
-                    text-decoration: none;
-                    margin-right: 5px;
-                }
-            }
+        .icon-back{
+            position: absolute;
+            left: 0;
         }
+    }
+
+    .workout-main{
+
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 20px;
+        color: #fff;
 
         .workout-card{
-            margin-top:20px;
+            width: 100%;
             border-radius: 10px;
             border: 1px solid #39404D;
             background-color: #292E38;
             padding: 20px;
-
+        
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -80,14 +51,14 @@
             row-gap: 8px;
 
             text-decoration: none;
-
+        
             .title{
                 width: 100%;
                 font-size: 16px;
                 font-weight: lighter;
                 color: #fff;
             }
-            .description{
+            .description, .date{
                 width: 100%;
                 font-size: 12px;
                 font-weight: lighter;
@@ -118,11 +89,6 @@
                 font-size: 10px;
             }
         }
-    }
 
-    footer{
-        width: calc(100% - 100px);
-        position: absolute;
-        bottom: 30px;
     }
 }
