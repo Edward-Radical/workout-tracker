@@ -4,6 +4,7 @@ import { AppError } from '../utils/AppError'; // Import the custom error class
 import logger from '../utils/logger';
 import Workouts from './Workouts.model';
 import Exercises from './Exercises.model';
+import Sets from './Sets.model';
 
 // Define the Workout model class
 class Workouts_Exercises extends Model<InferAttributes<Workouts_Exercises>, InferCreationAttributes<Workouts_Exercises>> {
@@ -11,6 +12,7 @@ class Workouts_Exercises extends Model<InferAttributes<Workouts_Exercises>, Infe
     declare workout_id: number;
     declare exercise_id: number;
     declare deletedAt: Date | null;
+    public Sets?: Sets[];
 }
 
 // Initialize the Workout model

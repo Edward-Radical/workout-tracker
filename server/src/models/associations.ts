@@ -30,7 +30,7 @@ Exercises.belongsToMany(Workouts, {
 });
 
 // The best of both worlds: the Super Many-to-Many relationship
-Exercises.hasMany(Sets, {foreignKey: 'workout_exercise_id'});
+// Exercises.hasMany(Sets, {foreignKey: 'workout_exercise_id'});
 Exercises.hasMany(Workouts_Exercises, { foreignKey: 'exercise_id'});
 Sets.belongsTo(Exercises, {foreignKey: 'workout_exercise_id'});
 Workouts_Exercises.belongsTo(Exercises, { foreignKey: 'exercise_id'});

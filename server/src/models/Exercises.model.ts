@@ -1,8 +1,10 @@
-import { Model, InferAttributes, InferCreationAttributes, DataTypes, CreationOptional } from 'sequelize';
+import { Model, InferAttributes, InferCreationAttributes, DataTypes, CreationOptional, Sequelize } from 'sequelize';
 import sequelize from "../config/dbConfig";
 import { AppError } from '../utils/AppError'; // Import the custom error class
 import logger from '../utils/logger';
 import Workouts from './Workouts.model';
+import Sets from './Sets.model';
+import Workouts_Exercises from './Workouts_Exercises.model';
 
 // Define the Workout model class
 class Exercises extends Model<InferAttributes<Exercises>, InferCreationAttributes<Exercises>> {
@@ -19,6 +21,8 @@ class Exercises extends Model<InferAttributes<Exercises>, InferCreationAttribute
     // Define the association methods explicitly
     public addWorkout!: (workout: Workouts | number) => Promise<void>; // Add method for association
     public getWorkouts!: () => Promise<Workouts[]>; // For fetching associated workouts
+    public Sets?: Sets[];
+    public Workouts_Exercises?: Workouts_Exercises[];
 }
 
 // Initialize the Workout model
@@ -111,8 +115,6 @@ async function index(): Promise<InferAttributes<Exercises>[] | undefined> {
     try {
         // Query the database
         const exercises = await Exercises.findAll({
-            limit: 10,  // Set limit to 10 exercises per page
-            offset: 0,   // Set offset based on current page number
             order: [['id', 'ASC']]
         });
 
@@ -141,12 +143,58 @@ async function index(): Promise<InferAttributes<Exercises>[] | undefined> {
 */
 async function show(id: number): Promise<object | null> {
     try {
-        const exercise = await Exercises.findByPk(id);
-        if(exercise){
-            const result = exercise.get({plain:true});
-            return result;
+        const exercise = await Exercises.findOne({
+            where: {
+                id: id
+            },
+            include: [
+                {
+                    model: Workouts_Exercises,
+                    include: [{
+                        model: Sets
+                    }]
+                }
+            ],
+        });
+
+        if (!exercise) return null;
+
+        // Recupera i dati in formato semplice
+        const result = exercise.get({ plain: true });
+
+        // Unifica tutti i Sets da tutti i Workouts_Exercises
+        const allSets = result.Workouts_Exercises?.flatMap(we => we.Sets) || [];
+
+        
+
+        if (allSets.length) {
+            // Raggruppa i set per data
+            const setsByDate = allSets.reduce((acc: any, set: any) => {
+                const date = new Date(set.createdAt).toISOString().split('T')[0]; // formato YYYY-MM-DD
+                if (!acc[date]) {
+                    acc[date] = [];
+                }
+                acc[date].push(set);
+                return acc;
+            }, {});
+        
+            // Ordina le date in ordine decrescente
+            const reversedSetsByDate = Object.keys(setsByDate)
+                .sort()
+                .reverse()
+                .reduce((acc: any, date: string) => {
+                    acc[date] = setsByDate[date];
+                    return acc;
+                }, {});
+        
+            // Sovrascrivi o aggiungi il campo Sets come mappa raggruppata
+            result.Sets = reversedSetsByDate;
+        } else {
+            result.Sets = [];
         }
-        return null;
+
+        return result;
+
     } catch (error: unknown) {
         if (error instanceof Error) {
             const res: object = {
