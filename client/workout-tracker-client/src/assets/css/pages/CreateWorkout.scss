@@ -1,0 +1,182 @@
+.workout-container{
+    background-color: #181C23;
+    padding: 50px;
+    position: relative;
+
+    overflow-y: scroll;
+    scrollbar-width: none;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+
+    span{
+        font-weight: bold;
+    }
+
+    header{
+        position: relative;
+        margin-top: 20px;
+        color: #fff;
+    
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+
+        .icon-back{
+            position: absolute;
+            left: 0;
+        }
+    }
+
+    .workout-main{
+        margin-top: 70px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 20px;
+        input{
+            width: 100%;
+            border: 1px solid #39404D;
+            background-color: rgba(225, 225, 225, .22);
+            border-radius: 5px;
+
+            height: 30px;
+            padding: 8px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #fff;
+
+            text-transform: none;
+
+            &::placeholder{
+                font-size: 14px;
+                text-transform: none;
+            }
+        }
+        button{
+            margin-top: 20px;
+        }
+
+        .label-days{
+            color: #BDBDBD;
+            width: 100%;
+        }
+        .days-container{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            width: 100%;
+            .day-card{
+                width: 30px;
+                height: 30px;
+                border: 1px solid #39404D;
+                background-color: rgba(225, 225, 225, .22);
+                border-radius: 5px;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+
+                color: #fff;
+
+                &.active{
+                    background-color: #F1870E;
+                }
+            }
+        }
+
+        .delete-action{
+            margin-top: 10px;
+            font-size: 13px;
+            color: #F1870E;
+            span{
+                color: #F1870E;
+            }
+        }
+    }
+
+    footer{
+        width: calc(100% - 100px);
+        position: absolute;
+        bottom: 30px;
+    }
+
+    // EXERCISES DIV
+    .exercises-list{
+        position: absolute;
+        top: 70px;
+        left: 0;
+        background-color: #292E38;
+        border-radius: 30px 30px 0 0;
+        padding: 20px;
+        height: calc(100% - 70px);
+
+        overflow-y: scroll;
+        scrollbar-width: none;
+        &::-webkit-scrollbar{
+            display: none;
+        }
+
+        input[type=text]{
+            width: 100%;
+            border: 1px solid #39404D;
+            background-color: rgba(225, 225, 225, .22);
+            border-radius: 5px;
+
+            height: 30px;
+            padding: 8px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #fff;
+
+            text-transform: none;
+
+            margin-bottom: 20px;
+
+            &::placeholder{
+                font-size: 14px;
+                text-transform: none;
+            }
+        }
+
+        .ex-item{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #BDBDBD;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        input[type=checkbox]{
+            width: 15px;
+            height: 15px;
+            accent-color: #F1870E;
+            margin-right: 15px;
+        }
+
+        footer{
+            position: sticky;
+            left: 20px;
+            bottom: 0;
+            width: calc(100% - 40px);
+        }
+
+    }
+}
