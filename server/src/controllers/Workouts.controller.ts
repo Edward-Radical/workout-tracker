@@ -60,6 +60,8 @@ async function httpPostWorkout(req: Request, res: Response, next: NextFunction) 
             success: false, 
             errors: errors.array() 
         });
+
+        return;
     }
 
     const request = req.body;
@@ -77,6 +79,18 @@ async function httpPostWorkout(req: Request, res: Response, next: NextFunction) 
 }
 
 async function httpUpdateWorkout(req: Request, res: Response, next: NextFunction){
+
+    //Check for validation error
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(400).json({ 
+            success: false, 
+            errors: errors.array() 
+        });
+
+        return;
+    }
+
     const request = req.body;
     const workoutId = parseInt(req.params.id);
 
