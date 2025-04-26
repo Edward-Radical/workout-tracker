@@ -58,10 +58,9 @@ main{
     cursor: pointer !important;
 }
 
-input:focus{outline: none !important; background-color: rgba(225, 225, 225, 0.22) !important;}
-input:active{outline: none !important; background-color: rgba(225, 225, 225, 0.22) !important;}
+input:focus{outline: none !important;}
+input:active{outline: none !important;}
 input:is(:-webkit-autofill, :autofill){background-color: rgba(225, 225, 225, 0.22) !important;}
-input{background-color: rgba(225, 225, 225, 0.22) !important;}
 
 .icon-back:hover{
     cursor: pointer;
