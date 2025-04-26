@@ -121,6 +121,9 @@ import IconArrowRight from '@/components/icons/IconArrowRight.vue';
 
 import { onBeforeRouteUpdate  } from 'vue-router'
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'
+
+const router = useRouter();
 
 let user = ref(JSON.parse(localStorage.getItem('userObj')));
 let userLogged = ref(localStorage.getItem('userLogged'));
@@ -151,13 +154,13 @@ async function logUser(){
     if(email.value && password.value){
         const res = await auth.login({email: email.value, password: password.value});
         if(res.success){
-        localStorage.setItem('userLogged', true);
-        localStorage.setItem('userObj', JSON.stringify(res.data));
-        userLogged.value = true;
+            localStorage.setItem('userLogged', true);
+            localStorage.setItem('userObj', JSON.stringify(res.data));
+            userLogged.value = true;
 
-        logSectionVisible.value = false;
-        signupSectionVisible.value = false;
-        starterIsVisible.value = false;
+            logSectionVisible.value = false;
+            signupSectionVisible.value = false;
+            starterIsVisible.value = false;
         } else alert(res.message)
     }
 }
@@ -219,8 +222,25 @@ if(userLogged.value && user.value){
 }
 
 onBeforeRouteUpdate (async (to, from) => {
-    getWorkouts();
+
+    let tokenExpired = helpers.tokenIsExpired();
+    if(userLogged.value && user.value && !tokenExpired){
+        getWorkouts();
+    }
 })
+
+let tokenExpired = helpers.tokenIsExpired();
+console.log(tokenExpired);
+
+if(tokenExpired){
+    // If the cookie or the JWT is expired
+    localStorage.removeItem("userLogged");
+    localStorage.removeItem("userObj");
+    userLogged.value = false;
+    cookie = null;
+    showLogSection();
+    router.push({ path: '/', replace: true });
+}
 
 </script>
 

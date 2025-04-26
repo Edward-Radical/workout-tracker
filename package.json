@@ -24,6 +24,8 @@
     "axios": "^1.8.4",
     "concurrently": "^9.1.2",
     "dotenv": "^16.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "node-server-init": "^1.1.8",
     "vue-cookies": "^1.8.6"
   },

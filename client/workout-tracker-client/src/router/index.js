@@ -5,6 +5,8 @@ import ShowWorkout from '../views/ShowWorkout.vue'
 import ShowExercise from '../views/ShowExercise.vue' 
 import HomeView from '../views/HomeView.vue'
 
+import helpers from '@/helpers/global';
+
 // Definisci le tue rotte
 const routes = [
   {
@@ -15,22 +17,26 @@ const routes = [
   {
     path: '/create-workout',
     name: 'workout',
-    component: CreateWorkout
+    component: CreateWorkout,
+    meta: { requiresAuth: true }
   },
   {
     path: '/list-workout',
     name: 'workout-list',
-    component: ListWorkout
+    component: ListWorkout,
+    meta: { requiresAuth: true }
   },
   {
     path: '/workout/:id',
     name: 'workout-show',
-    component: ShowWorkout
+    component: ShowWorkout,
+    meta: { requiresAuth: true }
   },
   {
     path: '/exercise/:id',
     name: 'exercise-show',
-    component: ShowExercise
+    component: ShowExercise,
+    meta: { requiresAuth: true }
   }
 ];
 
@@ -40,6 +46,20 @@ const router = createRouter({
   routes
 });
 
+// Middleware (navigation guard)
+router.beforeEach((to, from, next) => {
+
+  const token = document.cookie;
+  if(token) var tokenExpired = helpers.tokenIsExpired();
+
+  const isLoggedIn = token && !tokenExpired;
+  
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    next('/') // redirect to login if not logged
+  } else {
+    next() // allow navigation
+  }
+})
 
 
 export default router;
