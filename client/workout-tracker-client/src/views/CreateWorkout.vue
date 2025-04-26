@@ -157,7 +157,7 @@ async function saveWorkout(){
             exercises_list: selectedExercises.value
         });
 
-        if(res) router.push({ path: '/', replace: true })
+        if(res) router.push({ path: '/list-workout', replace: true })
 
     } catch (error) {
        console.log(error.message);
