@@ -90,7 +90,7 @@ async function httpUpdateWorkout(req: Request, res: Response, next: NextFunction
     }
 
     try {
-        const updatedWorkout = await update(workoutId, request);
+        const updatedWorkout = await update(workoutId, request, req.body.exercises_list);
         res.status(200).json({
             success: true,
             message: "Workout upated successfully",

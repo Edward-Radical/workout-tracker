@@ -248,7 +248,7 @@ async function store(request: Workouts, exercises_list: string[]): Promise<objec
     * @param  int  $id
     * @return Response
 */
-async function update(id: number, request: Object): Promise<object | undefined> {
+async function update(id: number, request: Workouts, exercises_list: string[]): Promise<object | undefined> {
 
     // Check if the workout exists
     if(!show(id)){
@@ -258,9 +258,19 @@ async function update(id: number, request: Object): Promise<object | undefined> 
         };
     }
 
-    const updatedWorkout = await Workouts.update(request, {
-        where: {id: id}
-    });
+    const workout = await Workouts.findByPk(id);
+    if(workout){
+        workout.update(request)
+        
+        //If there are related exercise do the association
+        for (const exerciseId of exercises_list) {
+    
+            const ex = await Exercises.findByPk(exerciseId);
+            if(ex) await workout.addExercise(ex);
+        }
+
+        return workout;
+    }
 
     return;
 }
