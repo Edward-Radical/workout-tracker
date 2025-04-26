@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory  } from 'vue-router';
 import CreateWorkout from '../views/CreateWorkout.vue'
+import UpdateWorkout from '../views/UpdateWorkout.vue'
 import ListWorkout from '../views/ListWorkout.vue'
 import ShowWorkout from '../views/ShowWorkout.vue' 
 import ShowExercise from '../views/ShowExercise.vue' 
@@ -18,6 +19,12 @@ const routes = [
     path: '/create-workout',
     name: 'workout',
     component: CreateWorkout,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/update-workout/:id',
+    name: 'workout-update',
+    component: UpdateWorkout,
     meta: { requiresAuth: true }
   },
   {

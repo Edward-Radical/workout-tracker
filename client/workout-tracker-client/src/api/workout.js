@@ -66,4 +66,33 @@ async function httpPostWorkout(reqBody) {
     }
 }
 
-export default { httpPostWorkout, httpGetWorkouts, httpGetWorkout }
+async function httpPatchWorkout(reqBody, id) {
+
+    const { name, description, schedule, rep_days, user_id, notes, exercises_list} = reqBody;
+    
+    try {
+        const { data } = await axiosInstance.patch(
+            API_URL + '/' + id,
+            {
+                name: name,
+                description: description,
+                schedule: schedule,
+                rep_days: rep_days,
+                user_id: user_id,
+                notes: notes,
+                exercises_list: exercises_list
+            },
+            {
+                withCredentials: true
+            }
+        ); 
+
+        if(data.success) return data;
+        else return false;
+
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+export default { httpPostWorkout, httpGetWorkouts, httpGetWorkout, httpPatchWorkout }
