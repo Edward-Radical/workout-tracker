@@ -20,6 +20,9 @@ import checkLoggedIn from './middlewares/checkLoggedIn';
 import cookieSession from 'cookie-session';
 import cookieParser from "cookie-parser";
 
+// CORS
+import cors from 'cors';
+
 import * as fs from 'fs';
 
 
@@ -40,7 +43,7 @@ app.use(cookieSession({
     maxAge: 60 * 60 * 1000,
     keys: [ COOKIE_KEY_1, COOKIE_KEY_2 ],
     path: '/', // default path
-    httpOnly: true,
+    httpOnly: false,
     secure: false, // deve combaciare con quello usato all’inizio
     sameSite: 'lax', // o 'lax' se usato così nella sessione
 }));
@@ -49,6 +52,14 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+// CORS
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true // permette l'invio del cookie
+}
+
+app.use(cors(corsOptions));
 
 
 // Setup Swagger
