@@ -230,8 +230,6 @@ onBeforeRouteUpdate (async (to, from) => {
 })
 
 let tokenExpired = helpers.tokenIsExpired();
-console.log(tokenExpired);
-
 if(tokenExpired){
     // If the cookie or the JWT is expired
     localStorage.removeItem("userLogged");

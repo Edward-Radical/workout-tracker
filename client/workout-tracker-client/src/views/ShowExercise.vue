@@ -111,8 +111,6 @@ let exerciseObj = ref({});
 async function getExercise(){
     try {
         const ex = await exercises.httpGetExercise(exerciseId);
-        console.log(ex);
-        
         if(ex) exerciseObj.value = ex;
         
         return ex;

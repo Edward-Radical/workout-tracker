@@ -48,8 +48,6 @@ async function register(userDataObj) {
 
 async function logout() {
     const { data } = await axiosInstance.get('/auth/logout');  
-    console.log(data);
-    
     return data.success;
 }
 
