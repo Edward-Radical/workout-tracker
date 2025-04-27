@@ -55,7 +55,7 @@ app.use(passport.session());
 
 // CORS
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: process.env.APP_CLIENT_URL,
     credentials: true // permette l'invio del cookie
 }
 

@@ -21,7 +21,8 @@ async function login(userDataObj) {
 }
 
 async function socialLogin() {
-    window.location.replace("http://localhost:5000/auth/google");
+    var URL = import.meta.VITE_API_BASE_URL;
+    window.location.replace(`${URL}/auth/google`);
 }
 
 async function register(userDataObj) {

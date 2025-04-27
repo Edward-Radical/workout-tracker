@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();  // Loads environment variables
+
 import express from 'express';
 import validateUserInput from '../validators/userValidation';
 import passport from 'passport';
@@ -75,7 +78,7 @@ AuthUserRouter.get('/google', passport.authenticate('google', { scope: ['profile
  * If fails redirect the user to the login page
  * If success it call the controller function httpSocialLogin
  */
-AuthUserRouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login', successRedirect: '/'}), httpSocialLogin);
+AuthUserRouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login', successRedirect: process.env.APP_CLIENT_URL}), httpSocialLogin);
 
 AuthUserRouter.get('/logout', httpLogout);
 
