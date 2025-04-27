@@ -101,6 +101,7 @@ const router = useRouter();
 const route = useRoute();
 
 const exerciseId = route.params.id;
+const workoutId = route.params.wid;
 
 function goBack(){
     router.go(-1);
@@ -123,11 +124,15 @@ async function getExercise(){
 let reps = ref(0);
 let kg = ref(0);
 async function addSet(setNumber){
+
+    // find the right workouts_exercises
+    let associationId = exerciseObj.value.Workouts_Exercises.find(we => we.workout_id == workoutId);
+    
     let reqObj = {
         set_number: setNumber + 1,
         reps: parseInt(reps.value),
         kg: parseInt(kg.value),
-        workout_exercise_id: exerciseObj.value.Workouts_Exercises[0].id
+        workout_exercise_id: associationId.id
     }
 
     try {
