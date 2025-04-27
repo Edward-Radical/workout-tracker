@@ -81,7 +81,7 @@ async function httpLoginUser(req: Request, res: Response, next: NextFunction): P
         });
 
         if (!user) {
-            res.status(400).json({ 
+            res.status(404).json({ 
                 success: false,
                 message: 'User not found' 
             });
@@ -90,15 +90,16 @@ async function httpLoginUser(req: Request, res: Response, next: NextFunction): P
         if(user){
             const JWT_TOKEN = await login(user, password);
             res.cookie("wt-jwt-session", JWT_TOKEN, {
-                    httpOnly: true,                                 // Impedisce l'accesso da JS (XSS protection)
+                    httpOnly: false,                                 // Impedisce l'accesso da JS (XSS protection)
                     secure: process.env.NODE_ENV === 'production',  // Solo via HTTPS (in prod)
-                    sameSite: 'strict',                             // Protegge da CSRF cross-site
+                    sameSite: 'lax',                             // Protegge da CSRF cross-site
                     maxAge: 60 * 60 * 1000                          // 1 ora
                 })
 
             res.status(201).json({
-                succes: true,
-                token: JWT_TOKEN
+                success: true,
+                token: JWT_TOKEN,
+                data: user
             });
         }
     } catch (error) {
@@ -144,13 +145,13 @@ async function httpLogout(req: Request, res: Response, next: NextFunction): Prom
 
             res.clearCookie('wt-social-session', {
                 path: '/', // default path
-                httpOnly: true,
+                httpOnly: false,
                 secure: false, // deve combaciare con quello usato all’inizio
                 sameSite: 'lax', // o 'lax' se usato così nella sessione
             });
             res.clearCookie('wt-social-session.sig', {
                 path: '/', // default path
-                httpOnly: true,
+                httpOnly: false,
                 secure: false, // deve combaciare con quello usato all’inizio
                 sameSite: 'lax', // o 'lax' se usato così nella sessione
             });
