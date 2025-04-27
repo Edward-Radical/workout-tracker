@@ -1,10 +1,11 @@
-import { Model, InferAttributes, InferCreationAttributes, DataTypes, CreationOptional, Op, where, literal } from 'sequelize';
+import { Model, InferAttributes, InferCreationAttributes, DataTypes, CreationOptional, where, literal, Op } from 'sequelize';
 import sequelize from "../config/dbConfig";
 import { AppError } from '../utils/AppError'; // Import the custom error class
 import logger from '../utils/logger';
 import User from './Users.model';
 import Exercises from './Exercises.model';
 import Workouts_Exercises from './Workouts_Exercises.model';
+import Sets from './Sets.model';
 
 // Define the Workout model class
 class Workouts extends Model<InferAttributes<Workouts>, InferCreationAttributes<Workouts>> {
@@ -78,18 +79,41 @@ interface WorkoutsQueryParams{
 }
 
 Workouts.addHook(
-    'beforeDestroy', async (workout: Workouts) => {
+    'beforeDestroy', async (workout: Workouts, options) => {
         try {
-            // Soft-delete logic here - When removing a Workout it should remove all the exercies related
-            // await Exercises.update(
-            //     { deletedAt: new Date() },  // Set the deletedAt timestamp to trigger the soft delete
-            //     {
-            //         where: {
-            //             workout_id: workout.id,
-            //             deletedAt: null  // Only update exercises that are not already soft-deleted
-            //         }
-            //     }
-            // );
+
+            const associations = await Workouts_Exercises.findAll({
+                where: { workout_id: workout.id },
+                attributes: ['id'],
+                transaction: options.transaction,
+            });
+
+            const associationIds = associations.map(assoc => assoc.id);
+            if(associations){
+                await Sets.update(
+                    { deletedAt: new Date() },
+                    {
+                        where: {
+                            workout_exercise_id: {
+                                [Op.in]: associationIds
+                            },
+                            deletedAt: null  // Only update sets that are not already soft-deleted
+                        },
+                        transaction: options.transaction,
+                    }
+                );
+            }
+
+            //Soft-delete logic here - When removing a Workout it should remove all occurrence in Workouts_Exercises
+            await Workouts_Exercises.update(
+                { deletedAt: new Date() },  // Set the deletedAt timestamp to trigger the soft delete
+                {
+                    where: {
+                        workout_id: workout.id,
+                        deletedAt: null  // Only update workouts that are not already soft-deleted
+                    }
+                }
+            );
             
         } catch (error: unknown) {
             if(error instanceof Error){
