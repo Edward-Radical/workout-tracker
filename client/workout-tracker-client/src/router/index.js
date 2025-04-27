@@ -40,7 +40,7 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/exercise/:id',
+    path: '/workouts/:wid/exercise/:id',
     name: 'exercise-show',
     component: ShowExercise,
     meta: { requiresAuth: true }

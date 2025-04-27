@@ -14,7 +14,7 @@
         </div>
         <div class="workout-main">
             <h2>Exercises</h2>
-            <router-link :to="{ name: 'exercise-show', params: { id: ex.id } }"
+            <router-link :to="{ name: 'exercise-show', params: { wid: workoutObj.id, id: ex.id } }"
                 v-for="(ex, id) in workoutObj.Exercises"
                 :key="id"
                 class="w-100 sets-container"
