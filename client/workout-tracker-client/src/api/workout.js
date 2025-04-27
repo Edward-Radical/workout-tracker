@@ -95,4 +95,22 @@ async function httpPatchWorkout(reqBody, id) {
     }
 }
 
-export default { httpPostWorkout, httpGetWorkouts, httpGetWorkout, httpPatchWorkout }
+async function httpDeleteWorkout(id) {
+    try {
+        const { data } = await axiosInstance.delete(
+            API_URL + `/${id}`,
+            {
+                withCredentials: true
+            }
+        ); 
+
+        if(data.success) return data;
+        else return false;
+
+    } catch (error) {
+        console.error(error.message);
+    }
+    
+}
+
+export default { httpPostWorkout, httpGetWorkouts, httpGetWorkout, httpPatchWorkout, httpDeleteWorkout }

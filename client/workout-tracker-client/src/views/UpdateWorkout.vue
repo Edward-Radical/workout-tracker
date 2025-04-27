@@ -26,7 +26,7 @@
             <button class="cta cta-orange" @click="getExercisesList()">ADD EXERCISE</button>
             <p class="delete-action">
                 Delete Workout? 
-                <span>Click Here</span>
+                <span @click="triggerSoftDelete()">Click Here</span>
             </p>
         </div>
         <footer>
@@ -163,9 +163,6 @@ async function updateWorkout(){
             exercises_list: selectedExercises.value
         }, workoutId);
 
-        console.log(res);
-        
-
         if(res) router.push({ name: 'workout-show', params: { id: workoutId }, replace: true });
 
     } catch (error) {
@@ -174,7 +171,23 @@ async function updateWorkout(){
     }
 }
 
+function triggerSoftDelete(){
+    if (confirm('Are you sure you want to delete this Workout?')) {
+        // Save it!
+        deleteWorkout();
+    }
+}
+async function deleteWorkout(){
+    try {
+        const res = await workout.httpDeleteWorkout(workoutId);
+        if(res) router.push({ name: 'workout-list', replace: true });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 onMounted(async () => {
+
     await getWorkout();
     
     workoutName.value = workoutObj.value.name ? workoutObj.value.name : null;
