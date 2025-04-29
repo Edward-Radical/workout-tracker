@@ -20,16 +20,30 @@ The project also include a frontend client based on Vue.js for better user exper
 ## Installation
 1. Clone the repository
 ```
-git clone
+git clone https://github.com/Edward-Radical/workout-tracker.git
 ```
-2. Intall the dependencies
-3. Create your .env file
+2. Intall the dependencies in the root folder
+```
+npm install
+```
+
+cd to client/workout-tracker-client
+```
+npm install
+```
+
+cd to server
+```
+npm install
+```
+
+3. Create your .env file in the server folder
 ```
 NODE_ENV=development
 
 APP_URL=http://localhost
 APP_CLIENT_URL=http://localhost:{YOUR_CLIENT_PORT}
-PORT={YOUR_SERVER_PORT}
+PORT=5000
 API_VERSION=v1
 
 DB_USER={YOUR_DB_USER}
@@ -49,19 +63,28 @@ SESSION_SECRET={GENERATE_A_RANDOM_STRING_AS_KEY}
 COOKIE_KEY_1={GENERATE_A_RANDOM_STRING_AS_KEY}
 COOKIE_KEY_2={GENERATE_A_RANDOM_STRING_AS_KEY}
 ```
+
+create the .env file in the client/workout-tracker-client folder
+```
+VITE_API_BASE_URL
+VITE_API_VERSION
+```
+
+5. Setup the Database: [see below DB Setup](##DB-Setup)
+
 4. Seed the Exercises table: cd to `/server` and run:
 ```
 npm run seed-exercises
 ```
 
-5. Setup the Database: [see below DB Setup](##DB-Setup)
+
 6. Start the server: the project use the npm package `concurrently` so you just need to run `npm run watch` in the root folder. Alternativley cd to each folder (client and server) and start them running `npm run dev`
 
 
 ## DB Setup
 - Ensure to have PostgreSQL installed and running
 - Create a new DB for the application or use your own (just remeber to setup the `.env` file correctly)
-- Run the migrations file `db-migrate up`: this command will create all the tables you need
+- cd to server/ and Run the migrations file `db-migrate up`: this command will create all the tables you need. If you encounter any problem just install db-migrate globally
 
 ## Technology
 
