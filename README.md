@@ -1,105 +1,143 @@
 # Workout Tracker - In Progress
-Solution for the Workout Tracker challenge from [roadmap.sh](https://roadmap.sh/projects/fitness-workout-tracker).
 
-## Description 
-This project involves creating a backend system for a workout tracker application where users can sign up, log in, create workout plans, and track their progress. The system will feature JWT authentication, CRUD operations for workouts, and generate reports on past workouts.
+Solution for the **Workout Tracker** challenge from [roadmap.sh](https://roadmap.sh/projects/fitness-workout-tracker).
 
-The project also include a frontend client based on Vue.js for better user experience.
+## 📌 Description
 
-## Features
-- Sign-Up: Allow users to create an account.
-- Login: Allow users to log into their account through JWT or Google Social login
-- Create Workout: Allow users to create and schedule workouts composed of multiple exercises.
-- Update Workout: Allow users to update workouts.
-- Delete Workout: Allow users to delete workouts.
-- List Workouts: List active or pending workouts sorted by date and time.
-- Exercises: After a workout has been created allow the user to add exercises to it
-- Set: For each exercise associated to a workout the user could track their progress adding new sets
+This project involves building a complete workout tracker application with both a backend and a Vue.js frontend. Users can sign up, log in, create and schedule workouts, track their progress with sets, and view workout history. The system features JWT authentication, full CRUD functionality, and the potential for social login via Google.
 
+## ✨ Features
 
-## Installation
-1. Clone the repository
-```
-git clone https://github.com/Edward-Radical/workout-tracker.git
-```
-2. Intall the dependencies in the root folder
-```
-npm install
-```
+- **Sign-Up:** Allow users to create an account.
+- **Login:** Support for JWT-based authentication and optional Google social login.
+- **Create Workout:** Users can create and schedule workouts composed of multiple exercises.
+- **Update/Delete Workout:** Users can update or remove their workouts.
+- **List Workouts:** Display active or upcoming workouts sorted by date and time.
+- **Exercises Management:** Users can add exercises to workouts.
+- **Sets Tracking:** For each exercise, users can track their progress by adding sets.
 
-cd to client/workout-tracker-client
-```
-npm install
-```
+## ⚙️ Installation
 
-cd to server
-```
-npm install
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Edward-Radical/workout-tracker.git
+   ```
 
-3. Create your .env file in the server folder
-```
-NODE_ENV=development
+2. **Install root dependencies**
+    ```bash
+    npm install
+    ```
 
-APP_URL=http://localhost
-APP_CLIENT_URL=http://localhost:{YOUR_CLIENT_PORT}
-PORT=5000
-API_VERSION=v1
+3. **Install client dependencies**
+    ```bash
+    # In client/workout-tracker-client
+    npm install
+    ```
 
-DB_USER={YOUR_DB_USER}
-DB_HOST={YOUR_DB_HOST}
-DB_DATABASE={YOUR_DB_NAME}
-DB_PASSWORD={YOUR_DB_PASSWORD}
-DB_PORT={YOUR_DB_PORT}
+4. **Install server dependencies**
+    ```bash
+    # In ../../server
+    npm install
+    ```
 
+5. **Create the .env file in the `server/` folder**
+    (You can skip social login variables if you just want to use JWT        authentication)
+    ```
+    NODE_ENV=development
 
-JWT_SECRET={GENERATE_A_RANDOM_STRING_AS_KEY}
+    APP_URL=http://localhost
+    APP_CLIENT_URL=http://localhost:{YOUR_CLIENT_PORT}
+    PORT=5000
+    API_VERSION=v1
 
-GOOGLE_CLIENT_ID={GENERATE_A_CLIENT_ID_IN_GOOGLE_DASHBOARD}
-GOOGLE_CLIENT_SECRET={GENERATE_A_CLIENT_SECRET_IN_GOOGLE_DASHBOARD}
-GOOGLE_CLIENT_CALLBACK=/auth/google/callback
+    DB_USER={YOUR_DB_USER}
+    DB_HOST={YOUR_DB_HOST}
+    DB_DATABASE={YOUR_DB_NAME}
+    DB_PASSWORD={YOUR_DB_PASSWORD}
+    DB_PORT={YOUR_DB_PORT}
 
-SESSION_SECRET={GENERATE_A_RANDOM_STRING_AS_KEY}
-COOKIE_KEY_1={GENERATE_A_RANDOM_STRING_AS_KEY}
-COOKIE_KEY_2={GENERATE_A_RANDOM_STRING_AS_KEY}
-```
+    JWT_SECRET={RANDOM_STRING}
 
-create the .env file in the client/workout-tracker-client folder
-```
-VITE_API_BASE_URL
-VITE_API_VERSION
-```
+    GOOGLE_CLIENT_ID={OPTIONAL}
+    GOOGLE_CLIENT_SECRET={OPTIONAL}
+    GOOGLE_CLIENT_CALLBACK=/auth/google/callback
 
-5. Setup the Database: [see below DB Setup](##DB-Setup)
+    SESSION_SECRET={RANDOM_STRING}
+    COOKIE_KEY_1={RANDOM_STRING}
+    COOKIE_KEY_2={RANDOM_STRING}
+    ```
 
-4. Seed the Exercises table: cd to `/server` and run:
-```
-npm run seed-exercises
-```
+6. **Create the .env file in the `client/workout-tracker-client/` folder**
+    ```
+    VITE_API_BASE_URL=http://localhost:{YOUR_SERVER_PORT}
+    VITE_API_VERSION=v1
+    ```
+    
+7. **Set up the database – [see below DB Setup](##DB-Setup)**
 
+8. **Seed the Exercises table**
+    ```
+    # In server/
+    npm run seed-exercises
+    ```
+   
+9. **Run the app**
+You can either:
+- Run both servers using `concurrently` from the root:
+    ```
+    npm run watch
+    ```
 
-6. Start the server: the project use the npm package `concurrently` so you just need to run `npm run watch` in the root folder. Alternativley cd to each folder (client and server) and start them running `npm run dev`
+- Or run frontend and backend separately:
+    ```
+    # In /client
+    npm run dev
+    # In /server
+    npm run dev
+    ```
 
+## 🛠️ DB Setup
+- Ensure PostgreSQL is installed and running.
+- Create a new database for the project (or use an existing one — just configure .env accordingly).
+- From the `server/` directory, run the migrations:
+    ```
+    db-migrate up
+    ```
+*If you get any error, make sure db-migrate is installed globally:*
+    ```
+    npm install -g db-migrate
+    ```
 
-## DB Setup
-- Ensure to have PostgreSQL installed and running
-- Create a new DB for the application or use your own (just remeber to setup the `.env` file correctly)
-- cd to server/ and Run the migrations file `db-migrate up`: this command will create all the tables you need. If you encounter any problem just install db-migrate globally
+## 🧰 Tech Stack
+**Backend:**
+- Node.js, 
+- Express, 
+- TypeScript, 
+- Sequelize, 
+- Passport, 
+- JWT
 
-## Technology
+**Frontend:** 
+- Vue.js (Vite)
 
-- Node.js
-- Express
-- TypeScript
+**Database:** 
 - PostgreSQL
-- Sequelize
+
+**Documentation:** 
 - Swagger
-- Passport + JWT
 
-## API Endpoints
-- All endpoints are versioned under /api/v1.
-- The project provide Swagger-doc so after the installation you could navigate to http://localhost:{YOUR_PORT_NUMBER}/api-docs
+## 📡 API Endpoints
+All routes are prefixed with `/api/v1`.
 
-## Feature pending to be implemented
-- [ ] Testing: Write tests for all the backend APIs.
-- [ ] Generate Reports: Generate reports on past workouts and progress.
+**Swagger UI available at:**
+    ```
+    http://localhost:{YOUR_PORT}/api-docs
+    ```
+
+## 🚧 Features in Progress
+- [ ] Testing: Write unit/integration tests for backend APIs.
+- [ ] Reports: Generate user-specific workout progress reports.
+- [ ] Client Improvements: Enhance the frontend experience.
+
+---
+*Feel free to contribute or report issues!* 🙌
